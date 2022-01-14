@@ -47,7 +47,8 @@ const otheActions = ["追放", "キル", "爆発", "CO", "不明"];
 const hr = { id: -3, name: "hr", roletype: [false, false, false, false] };
 const ActionsNameList = [   { id: -1, name: ["追放", 0] },
                             { id: -2, name: ["殺害", 0] },
-                            { id: -3, name: ["医者", 0] },];
+                            { id: -3, name: ["爆発", 0] },
+                            { id: -4, name: ["医者", 0] },];
 
 const target_day = {
     sort: true,

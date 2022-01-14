@@ -347,8 +347,21 @@ const Game = () => {
     const [nameText, setNameText] = useState("");
     const [data, setData] = useState([{
         id: 0,
-        name: ["テラゾー",0],
-    }]);
+        name: ["ドロップダウンで", 0],
+        role: [["役職", 0], ["並べ替えは", 0]],
+        deadRole:[["死後に出る",3],],
+        target_day1:[["誰の家に",0]],
+        action_day1:[["結果",0]],
+    },
+        {
+            id: 1,
+            name: ["確定役メモ", 1],
+            role: [["列ヘッダクリック", 2]],
+            deadRole: [["役職", 0],],
+            target_day1: [["行ったか", 0]],
+            action_day1: [["バカ結果は黄色く", 0], ["バカ結果", 0]],
+        }
+    ]);
     const [columns, setColumns] = useState(defaultColumns);
     const onChangeText = (e) => {
         setNameText(e.target.value);
@@ -389,7 +402,7 @@ const Game = () => {
                 </Container>
             </div>
             <div>
-                <textarea cols="20" rows="12" value={nameText} onChange={onChangeText} />
+                <textarea cols="20" rows="12" value={nameText} onChange={onChangeText} placeholder="名前を改行区切りで入力出来るだけ短く" />
                 <div><button onClick={onClickButton}>setName</button></div>
             </div>
         </div>

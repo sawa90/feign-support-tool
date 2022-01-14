@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/feign-support-tool/static/css/main.3044d052.css",
-    "main.js": "/feign-support-tool/static/js/main.c0a2148b.js",
+    "main.js": "/feign-support-tool/static/js/main.c401ea9d.js",
     "index.html": "/feign-support-tool/index.html",
     "main.3044d052.css.map": "/feign-support-tool/static/css/main.3044d052.css.map",
-    "main.c0a2148b.js.map": "/feign-support-tool/static/js/main.c0a2148b.js.map"
+    "main.c401ea9d.js.map": "/feign-support-tool/static/js/main.c401ea9d.js.map"
   },
   "entrypoints": [
     "static/css/main.3044d052.css",
-    "static/js/main.c0a2148b.js"
+    "static/js/main.c401ea9d.js"
   ]
 }

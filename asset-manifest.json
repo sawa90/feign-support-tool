@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/feign-support-tool/static/css/main.3044d052.css",
+    "main.js": "/feign-support-tool/static/js/main.1c9d0d25.js",
+    "index.html": "/feign-support-tool/index.html",
+    "main.3044d052.css.map": "/feign-support-tool/static/css/main.3044d052.css.map",
+    "main.1c9d0d25.js.map": "/feign-support-tool/static/js/main.1c9d0d25.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.3044d052.css",
+    "static/js/main.1c9d0d25.js"
+  ]
+}

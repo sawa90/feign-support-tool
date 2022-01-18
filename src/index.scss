@@ -2,36 +2,90 @@ html {
     transform-origin: top left;
     transform: scale(0.9);
 }
-.role{
-    display:inline-block;
-    &.unknown{
+.role {
+    display: inline-block;
+    margin: 1px;
+    border-radius: 0.2rem;
+
+    &.unknown {
         background-color: #eee;
     }
-    &.crew{
+
+    &.crew {
         background-color: #8f8;
     }
-    &.imp{
+
+    &.imp {
         background-color: #f88;
     }
-    &.neutral{
+
+    &.neutral {
         background-color: #88f;
     }
-    &.disable{
-        background-color: #888;
+
+    &.insane {
+        background-color: #ff8;
     }
+
+    &.sane {
+        background-color: #8ff;
+    }
+
 }
+
+.name {
+    display: block;
+    width:fit-content;
+}
+
 table,th, td, tr {
     border-collapse: collapse; 
     border: 2px solid #e0e0e0; 
+    height: 100%;
 }
 
 .InsaneResult {
     background-color: #ff0;
     width: 100%;
     height: 100%;
-    padding:1px;
+    display: flex;
+    align-items: center;
 }
 
+.SaneResult {
+    background-color: #0ff;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.Important {
+    border: 1.5px solid #000;
+    margin: -1px;
+    box-sizing: border-box;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+img {
+    vertical-align: bottom;
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.selectImg {
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+}
+
+.might {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+}
 
 ::-webkit-scrollbar {
     display: none;

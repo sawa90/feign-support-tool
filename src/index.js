@@ -184,8 +184,48 @@ import './index.scss';
             );
         },
     };
-
+    const colorList = [
+        ["White", "#ffffff"],
+        ["Orange", "#ff871f"],
+        ["Purple", "#71348b"],
+        ["Green", "#2a7b0c"],
+        ["Blue", "#4b6fd7"],
+        ["Red", "#b3000b"],
+        ["Yellow", "#ffe352"],
+        ["Lime", "#83ff46"],
+        ["Cyan", "#31d7c7"],
+        ["Pink", "#ff8fb3"],
+        ["Brown", "#654321"],
+        ["Magenta", "#ff00df"],
+        ["DarkBlue", "#3817e3"],
+        ["DarkGreen", "#2a5b2b"],
+        ["DarkOrange", "#ff4406"],
+    ];
     const defaultColumns = [
+        {
+            text: '　',
+            dataField: 'color',
+            editable: true,
+            sort: true,
+            sortFunc: (a, b, order, dataField, rowA, rowB) => {
+                if (rowA.id < 0 || rowB.id < 0) return rowB.id - rowA.id;
+                const res = a > b ? 1 : (a < b ? -1 : 0);
+                if (order === 'asc') return res;
+                else return -res;
+            },
+            formatter: (cell, row) => {
+                if (cell && cell.length >1) {
+                    return <div className="colorpicker" style={{display:"block", backgroundColor: cell[1] }}></div>;
+                }
+                return " ";
+            },
+            editorRenderer: (editorProps, value, row, column, rowIndex, columnIndex) => {
+                if (!(column.dataField in row)) row[column.dataField] = false;
+                return (
+                    <ColorSelect {...editorProps} value={value} row={row} options={colorList} dataField={column.dataField} text={column.text} />
+                );
+            },
+        },
         {
             text: '名前',
             dataField: 'name',
@@ -284,6 +324,91 @@ import './index.scss';
         { ...target_day, text: '1', dataField: 'target_day1', },
         { ...action_day, text: '結果', dataField: 'action_day1', },
     ];
+
+
+    class ColorSelect extends React.Component {
+        constructor(props) {
+            super(props);
+            let name = false;
+            if (props.row.id >= 0) name = props.row.name[0];
+            this.state = {
+                value: this.props.row[props.dataField],
+                name: name
+            };
+        }
+
+        getValue() {
+            if ("newValue" in this) return this.newValue;
+            else return this.state.value;
+        }
+
+        handleOnUpdate(event) {
+            if (event) {
+                this.setState({
+                    value: event.value,
+                })
+                if (this.state.name) colorNameDic[this.state.name] = event.value;
+                return event.value;
+            }
+            else return this.state.value;
+        }
+
+        render() {
+            const { value, onUpdate, ...rest } = this.props;
+            const optionstyle = {
+                display: "inline-block",
+                width: "2rem",
+                height: "2rem",
+                margin: "0.05rem",
+                borderRadius: "0.5rem",
+                padding: "0",
+                borderCollapse: "collapse",
+                border: "0.05rem solid #aaa",
+            };
+            const customStyles = {
+                option: (provided, state) => {
+                    console.log(provided);
+                    return ({
+                        ...provided,
+                        ...optionstyle,
+                        backgroundColor:state.data.value[1],
+                    });
+                },
+                control: (provided) => ({
+                    ...provided,
+                    display: "flex"
+                }),
+                menu: (provided) => ({
+                    ...provided,
+                    width: "-moz-fit-content",
+                    width: "fit-content",
+                }),
+                menuList: (provided) => ({
+                    ...provided,
+                    width: "12.6rem",
+                }),
+                container: (provided) => ({
+                    ...provided,
+                    width: "-moz-fit-content",
+                    width: "fit-content",
+                }),
+            };
+
+            return (
+                <Select
+                    {...rest} isClearable={false}
+                    key={this.props.dataField} name={this.props.text}
+                    onChange={(event) => { this.newValue = this.handleOnUpdate(event); return onUpdate(this.newValue); }}
+                    className="select Color"
+                    defaultValue={() => { let color = this.props.row[this.props.dataField]; if (color) return { value: color, label: <div className="colorpicker" style={{ backgroundColor: color[1] }}>　</div> }; }}
+                    options={[...this.props.options.map((option) => { return { value: option, label: "　" } })]}
+                    menuIsOpen={true}
+                    autoFocus={true}
+                    styles={customStyles}
+                />
+            )
+        }
+    }
 
     class InsaneSelect extends React.Component {
         constructor(props) {
@@ -392,17 +517,22 @@ import './index.scss';
         render() {
             const { value, onUpdate, ...rest } = this.props
             const customStyles = {
-                option: (provided, state) => (
-                    {
-                        ...provided,
-                        display: "inline-block",
-                        width: (typeof (state.label) === "string") ? "6rem" : "2rem",
-                        padding: "0.1rem",
-                        borderCollapse: "collapse",
-                        border: "0.05rem solid #aaa",
-                        backgroundColor: roletypeColor[state.data.value[1]],
-
-                    }),
+                option: (provided, state) => {
+                    const style = (
+                        {
+                            ...provided,
+                            display: "inline-block",
+                            width: (typeof (state.label) === "string") ? "6rem" : "2rem",
+                            padding: "0.1rem",
+                            borderCollapse: "collapse",
+                            border: "0.05rem solid #aaa",
+                            backgroundColor: roletypeColor[state.data.value[1]],
+                            boxSizing: "border-box",
+                        });
+                    if (state.data.value[2] === 2 && state.data.value[0] in colorNameDic)
+                        style.background = "linear-gradient(transparent 80%, " + colorNameDic[state.data.value[0]][1] + " 18%)";
+                    return style;
+                },
                 control: (provided) => ({
                     ...provided,
                     display: "flex"
@@ -467,16 +597,18 @@ import './index.scss';
                     })}
                     options={[...this.props.options.map((option) => {
                         let label = option.name;
-                        if (option.actionType !== 2 && option.name in roleImage) {
-                            label = <span className="selectImg"><img src={roleImage[option.name]} alt={option.name} /></span>;
-                        }
                         let roleTypeNum = option.roletype[this.state.roleTypeNum] ? this.state.roleTypeNum : 0;
-                        if (option.actionType === 0) {
-                            if (option.name === "バ") return { value: ["バカ結果？", 4, 0], label: <span className="selectImg">バ</span> };
-                            if (option.name === "真") return { value: ["真結果", 5, 0], label: <span className="selectImg">真</span> };
-                            if (option.name === "バカ結果？") roleTypeNum = 4;
-                            else if (option.name === "真結果") roleTypeNum = 5;
-                        }
+                        if (option.actionType !== 2) {
+                            if (option.name in roleImage) {
+                                label = <span className="selectImg"><img src={roleImage[option.name]} alt={option.name} /></span>;
+                            }
+                            if (option.actionType === 0) {
+                                if (option.name === "バ") return { value: ["バカ結果？", 4, 0], label: <span className="selectImg">バ</span> };
+                                if (option.name === "真") return { value: ["真結果", 5, 0], label: <span className="selectImg">真</span> };
+                                if (option.name === "バカ結果？") roleTypeNum = 4;
+                                else if (option.name === "真結果") roleTypeNum = 5;
+                            }
+                        } 
                         return {
                             value: [option.name, roleTypeNum, option.actionType], label: label
                         };
@@ -492,6 +624,7 @@ import './index.scss';
     }
 
     let nameList = [];
+    let colorNameDic = {};
 
 
     const Game = () => {
@@ -524,6 +657,7 @@ import './index.scss';
                 const newNameStringList = [...new Set(nameText.split('\n'))].filter(e => e !== "");
                 setNameStringList(newNameStringList);
                 nameList = newNameStringList.map((name, i) => { return { id: i + 200, name: name, roletype: [true, true, true, true, true,], actionType: 2 }; }).concat({ id: 199, name: "？", roletype: [true, false, false, false, false], actionType: 2 });
+                colorNameDic = {};
                 setColumns(defaultColumns);
                 setData(newNameStringList.map((name, i) => { return { id: i, name: [name, 0] }; }).concat(ActionsNameList.map((item) => Object.assign({}, item))));
             } else if (window.confirm("名前リストを更新しますか？（名前が削除・変更されたデータは消去されます）")) {
@@ -545,12 +679,17 @@ import './index.scss';
                         }
                     });
                 }
+                colorNameDic = {};
+                newData.forEach((item) => {
+                    if (item.id < 0 || !("color" in item)) return;
+                    colorNameDic[item.name[0]] = item.color;
+                });
                 setNameStringList(newNameStringList);
                 setData(newData);
             }
         }
         const AddDay = () => {
-            const day = (columns.length - 3) / 2 + 1;
+            const day = (columns.length - 4) / 2 + 1;
             setColumns(columns.concat([{ ...target_day, text: '' + day, dataField: 'target_day' + day, }, { ...action_day, text: '結果', dataField: 'action_day' + day, }]));
         }
 

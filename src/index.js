@@ -98,7 +98,8 @@ import './index.scss';
         { id: -3, name: ["爆発", 0] },
         { id: -4, name: ["医者", 0] },
         { id: -5, name: ["挑発", 0] },
-        { id: -6, name: ["対立", 0] },];
+        { id: -6, name: ["対立", 0] },
+        { id: -7, name: ["ﾗｲﾝ", 0] },];
     const column_template = {
         sort: true,
         sortFunc: (a, b, order, dataField, rowA, rowB) => {
@@ -141,6 +142,8 @@ import './index.scss';
                         return;
                     }
                     if (item[0] in roleImage) return <img key={item + i} className={roletype[item[1]]} src={roleImage[item[0]]} alt={item[0]} />;
+                } else if (playerIsIcon && item[0] in colorNameDic) {
+                    return <span key={item + i} className="iconContainer"><img src={colorNameDic[item[0]][0]} alt={item[0]} /><span className="iconTextContainer "><span className="iconText">{item[0]}</span></span></span>;
                 }
                 if (directionColumn && item[2] === 2) return <span key={item + i} className="name"><span className={roletype[item[1]]} > {item[0]}</span></span>;
                 else return <span key={item + i} className={roletype[item[1]]} > {item[0]}</span>;
@@ -157,15 +160,13 @@ import './index.scss';
         editorRenderer: (editorProps, value, row, column, rowIndex, columnIndex) => {
             if (!(column.dataField in row)) row[column.dataField] = [];
             let options = nameList;
-            if (row.id < 0) {
-                options = [{ id: -2, name: "Hoge", roletype: [false, false, false, false, false], actionType: 1 }, ...options];
-            }
             return (
                 <RoleSelect {...editorProps} value={value} row={row} options={options} dataField={column.dataField} text={column.text} />
             );
         },
     };
     const action_day = {
+        text: '　',
         ...column_template,
         editorRenderer: (editorProps, value, row, column, rowIndex, columnIndex) => {
             if (!(column.dataField in row)) row[column.dataField] = [];
@@ -185,21 +186,21 @@ import './index.scss';
         },
     };
     const colorList = [
-        ["White", "#ffffff"],
-        ["Orange", "#ff871f"],
-        ["Purple", "#71348b"],
-        ["Green", "#2a7b0c"],
-        ["Blue", "#4b6fd7"],
-        ["Red", "#b3000b"],
-        ["Yellow", "#ffe352"],
-        ["Lime", "#83ff46"],
-        ["Cyan", "#31d7c7"],
-        ["Pink", "#ff8fb3"],
-        ["Brown", "#654321"],
-        ["Magenta", "#ff00df"],
-        ["DarkBlue", "#3817e3"],
-        ["DarkGreen", "#2a5b2b"],
-        ["DarkOrange", "#ff4406"],
+        [process.env.PUBLIC_URL +"/icon/White.png", "#ffffff"],
+        [process.env.PUBLIC_URL +"/icon/Orange.png", "#ff871f"],
+        [process.env.PUBLIC_URL +"/icon/Purple.png", "#71348b"],
+        [process.env.PUBLIC_URL +"/icon/Green.png", "#2a7b0c"],
+        [process.env.PUBLIC_URL +"/icon/Blue.png", "#4b6fd7"],
+        [process.env.PUBLIC_URL +"/icon/Red.png", "#b3000b"],
+        [process.env.PUBLIC_URL +"/icon/Yellow.png", "#ffe352"],
+        [process.env.PUBLIC_URL +"/icon/Lime.png", "#83ff46"],
+        [process.env.PUBLIC_URL +"/icon/Cyan.png", "#31d7c7"],
+        [process.env.PUBLIC_URL +"/icon/Pink.png", "#ff8fb3"],
+        [process.env.PUBLIC_URL +"/icon/Brown.png", "#654321"],
+        [process.env.PUBLIC_URL +"/icon/Magenta.png", "#ff00df"],
+        [process.env.PUBLIC_URL +"/icon/DarkBlue.png", "#3817e3"],
+        [process.env.PUBLIC_URL +"/icon/DarkGreen.png", "#2a5b2b"],
+        [process.env.PUBLIC_URL +"/icon/DarkOrange.png", "#ff4406"],
     ];
     const defaultColumns = [
         {
@@ -214,7 +215,12 @@ import './index.scss';
                 else return -res;
             },
             formatter: (cell, row) => {
-                if (cell && cell.length >1) {
+                if (nameIsIcon) {
+                    const name = row.name[0];
+                    if (row.id >= 0 && name in colorNameDic) {
+                        return <div className="nameAreaIconContainer"><span className="iconContainer"><img src={colorNameDic[name][0]} alt={name} /><span className="iconTextContainer "><span className="iconText">{name}</span></span></span></div>;
+                    } else return name;
+                } else if (cell && cell.length >1) {
                     return <div className="colorpicker" style={{display:"block", backgroundColor: cell[1] }}></div>;
                 }
                 return " ";
@@ -232,15 +238,17 @@ import './index.scss';
             sort: true,
             sortFunc: (a, b, order, dataField, rowA, rowB) => {
                 if (rowA.id < 0 || rowB.id < 0) return rowB.id - rowA.id;
-                const res = a > b ? 1 : (a < b ? -1 : 0);
+                const na = a[1] + a[0];
+                const nb =  b[1] + b[0];
+                const res = na > nb ? 1 : (na < nb ? -1 : 0);
                 if (order === 'asc') return res;
                 else return -res;
             },
             editable: true,
             formatter: (cell, row) => {
                 if (cell) {
-                    if (cell[1] >= 5) return <span className="might" style={optionbackground[cell[1]]}>{cell[0]}</span>;
-                    return cell[0];
+                    if (cell[1] >= 5) return <span className="might" style={optionbackground[cell[1]]}>{nameIsIcon ?"　": cell[0]}</span>;
+                    return nameIsIcon ? "　" : cell[0];
                 }
                 return " ";
             },
@@ -322,7 +330,7 @@ import './index.scss';
             },
         },
         { ...target_day, text: '1', dataField: 'target_day1', },
-        { ...action_day, text: '結果', dataField: 'action_day1', },
+        { ...action_day, dataField: 'action_day1', },
     ];
 
 
@@ -367,7 +375,6 @@ import './index.scss';
             };
             const customStyles = {
                 option: (provided, state) => {
-                    console.log(provided);
                     return ({
                         ...provided,
                         ...optionstyle,
@@ -538,7 +545,12 @@ import './index.scss';
                     display: "flex"
                 }),
                 multiValue: (provided, { data }) => {
-                    return {
+                    if (data.value[2] === 2 && data.value[0] in colorNameDic) return {
+                        ...provided,
+                        background: "linear-gradient(transparent 80%, " + colorNameDic[data.value[0]][1] + " 18%)",
+                        border: "1px solid #888",
+                    };
+                    else return {
                         ...provided,
                         backgroundColor: roletypeColor[data.value[1]],
                     };
@@ -625,11 +637,15 @@ import './index.scss';
 
     let nameList = [];
     let colorNameDic = {};
+    let playerIsIcon = true;
+    let nameIsIcon = false;
 
 
     const Game = () => {
-        const [render, setRender] = useState(0);
+        const [render, setRender] = useState(false);
         const [nameText, setNameText] = useState("");
+        const [PlayerIsIcon, setPlayerIsIcon] = useState(playerIsIcon);
+        const [NameIsIcon, setNameIsIcon] = useState(nameIsIcon);
         const [nameStringList, setNameStringList] = useState([]);
         const [data, setData] = useState([{
             id: 0,
@@ -658,7 +674,18 @@ import './index.scss';
                 setNameStringList(newNameStringList);
                 nameList = newNameStringList.map((name, i) => { return { id: i + 200, name: name, roletype: [true, true, true, true, true,], actionType: 2 }; }).concat({ id: 199, name: "？", roletype: [true, false, false, false, false], actionType: 2 });
                 colorNameDic = {};
-                setColumns(defaultColumns);
+                const newColumns = defaultColumns.slice();
+                const firstColumn = newColumns.shift();
+                if (nameIsIcon) {
+                    if (firstColumn.dataField === "name") newColumns.unshift(firstColumn);
+                    else newColumns.splice(1, 0, firstColumn);
+                } else {
+                    if (firstColumn.dataField == "color") newColumns.unshift(firstColumn);
+                    else newColumns.splice(1, 0, firstColumn);
+                }
+                newColumns[0].text = "　";
+                newColumns[1].text = "名前";
+                setColumns(newColumns);
                 setData(newNameStringList.map((name, i) => { return { id: i, name: [name, 0] }; }).concat(ActionsNameList.map((item) => Object.assign({}, item))));
             } else if (window.confirm("名前リストを更新しますか？（名前が削除・変更されたデータは消去されます）")) {
                 const newNameStringList = [...new Set(nameText.split('\n'))].filter(e => e !== "");
@@ -690,7 +717,7 @@ import './index.scss';
         }
         const AddDay = () => {
             const day = (columns.length - 4) / 2 + 1;
-            setColumns(columns.concat([{ ...target_day, text: '' + day, dataField: 'target_day' + day, }, { ...action_day, text: '結果', dataField: 'action_day' + day, }]));
+            setColumns(columns.concat([{ ...target_day, text: '' + day, dataField: 'target_day' + day, }, { ...action_day, dataField: 'action_day' + day, }]));
         }
 
         const rowStyle = (row, rowIndex) => {
@@ -700,9 +727,47 @@ import './index.scss';
                 return { backgroundColor: roleLabelBgColor[row.name[1]] };
         };
         const NameInputArea = () => {
+            const playerIconChangeHandler = (event) => {
+                setPlayerIsIcon(event.target.checked);
+                playerIsIcon = event.target.checked;
+            };
+            const nameIconChangeHandler = (event) => {
+                setNameIsIcon(event.target.checked);
+                nameIsIcon = event.target.checked;
+                const newColumns = columns.slice();
+                const firstColumn = newColumns.shift();
+                if (nameIsIcon) {
+                    if (firstColumn.dataField === "name") newColumns.unshift(firstColumn);
+                    else newColumns.splice(1, 0, firstColumn);
+                } else {
+                    if (firstColumn.dataField == "color") newColumns.unshift(firstColumn);
+                    else newColumns.splice(1, 0, firstColumn);
+                }
+                newColumns[0].text = "　";
+                newColumns[1].text = "名前";
+                setColumns(newColumns);
+            };
             return (
                 <div>
-                    <textarea cols="20" rows="12" value={nameText} onChange={onChangeText} placeholder="名前を改行区切りで入力出来るだけ短く" />
+                    <textarea cols="20" rows="12" value={nameText} onChange={onChangeText} placeholder="名前を改行区切りで入力出来るだけ短く（五文字以内）" />
+                    <label>
+                    <input
+                        type="checkbox"
+                        checked={PlayerIsIcon}
+                        onChange={playerIconChangeHandler}
+                        id="iconCheckBox"
+                        style={{ marginLeft: "1rem" }}
+                    />
+                    アイコン</label>
+                    <label>
+                    <input
+                        type="checkbox"
+                        checked={NameIsIcon}
+                        onChange={nameIconChangeHandler}
+                        id="nameIconCheckBox"
+                        style={{ marginLeft: "1rem" }}
+                    />
+                    名前欄アイコン</label>
                     <div><button onClick={onClickButton}>setName</button></div>
                 </div>
             );
@@ -718,13 +783,14 @@ import './index.scss';
             <div>
                 <div >
                     <button onClick={AddDay}>翌日</button>
+
                     <Container>
                         <BootstrapTable
                             data={data}
                             columns={columns}
                             keyField="id"
                             bootstrap4={true}
-                            cellEdit={cellEditFactory({ mode: "click", blurToSave: true, afterSaveCell: (oldValue, newValue, row, column) => { if (column.dataField === 'name') setRender(render + 1); } })}
+                            cellEdit={cellEditFactory({ mode: "click", blurToSave: true, afterSaveCell: (oldValue, newValue, row, column) => { if (column.dataField === 'name') setRender(!render); } })}
                             rowStyle={rowStyle}
                         />
                     </Container>

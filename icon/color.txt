@@ -1,0 +1,15 @@
+Pink
+Cyan
+Lime
+Brown
+DarkBlue
+Magenta
+DarkGreen
+DarkOrange
+Yellow
+Blue
+Red
+Orange
+White
+Purple
+Green

@@ -747,6 +747,27 @@ import './index.scss';
                 newColumns[1].text = "名前";
                 setColumns(newColumns);
             };
+            const onClickReset = () => {
+                if (window.confirm("入力内容をリセットしますか？")) {
+                    const newdata = data.map((item) => {
+                        if ("color" in item) return { id: item.id, name: [item.name[0], 0], color: item.color };
+                        else return { id: item.id, name: [item.name[0], 0] };
+                    });
+                    const newColumns = defaultColumns.slice();
+                    const firstColumn = newColumns.shift();
+                    if (nameIsIcon) {
+                        if (firstColumn.dataField === "name") newColumns.unshift(firstColumn);
+                        else newColumns.splice(1, 0, firstColumn);
+                    } else {
+                        if (firstColumn.dataField == "color") newColumns.unshift(firstColumn);
+                        else newColumns.splice(1, 0, firstColumn);
+                    }
+                    newColumns[0].text = "　";
+                    newColumns[1].text = "名前";
+                    setColumns(newColumns);
+                    setData(newdata);
+                }
+            }
             return (
                 <div>
                     <textarea cols="20" rows="12" value={nameText} onChange={onChangeText} placeholder="名前を改行区切りで入力出来るだけ短く（五文字以内）" />
@@ -768,7 +789,10 @@ import './index.scss';
                         style={{ marginLeft: "1rem" }}
                     />
                     名前欄アイコン</label>
-                    <div><button onClick={onClickButton}>setName</button></div>
+                    <div>
+                        <button onClick={onClickButton}>setName</button>
+                        <button onClick={onClickReset} style={{ marginLeft: "1rem" }}>リセット</button>
+                    </div>
                 </div>
             );
         }
@@ -783,7 +807,6 @@ import './index.scss';
             <div>
                 <div >
                     <button onClick={AddDay}>翌日</button>
-
                     <Container>
                         <BootstrapTable
                             data={data}

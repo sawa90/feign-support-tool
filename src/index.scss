@@ -1,6 +1,7 @@
 html {
     transform-origin: top left;
     transform: scale(0.9);
+    overflow: scroll;
 }
 
 body * {
@@ -142,4 +143,11 @@ img {
     border-radius: 0.2rem;
     border: 0.1rem solid #000;
     box-sizing: border-box;
+}
+.revive {
+    position:absolute;
+    width: 1.5rem;
+    height: 1.5rem;
+    top:0;
+    left:-1.5rem;
 }

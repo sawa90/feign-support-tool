@@ -1,0 +1,311 @@
+@charset "UTF-8";
+html {
+  overflow: hidden;
+  background-color: blue;
+}
+
+body {
+  overflow: hidden;
+  margin: 0;
+  position: fixed;
+  left: 0px;
+  right: 0px;
+  top: 0px;
+  bottom: 0px;
+}
+
+body * {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.role {
+  display: inline-block;
+  margin: 0.05rem;
+  margin-top: 0.1rem;
+  border-radius: 0.2rem;
+}
+.role.unknown {
+  background-color: #eee;
+}
+.role.crew {
+  background-color: #8f8;
+}
+.role.imp {
+  background-color: #f88;
+}
+.role.neutral {
+  background-color: #88f;
+}
+.role.insane {
+  background-color: #ff8;
+}
+.role.sane {
+  background-color: #8ff;
+}
+
+.name {
+  display: block;
+  width: fit-content;
+}
+
+.InsaneResult {
+  background-color: #ff0;
+  width: 100%;
+  height: 100%;
+  display: inline-block;
+  align-items: center;
+  padding-left: 0.2rem;
+  margin-left: -0.2rem;
+  padding-right: 0.2rem;
+  margin-right: -0.2rem;
+}
+
+.SaneResult {
+  background-color: #0ff;
+  width: 100%;
+  height: 100%;
+  display: inline-block;
+  align-items: center;
+  padding-left: 0.2rem;
+  margin-left: -0.2rem;
+  padding-right: 0.2rem;
+  margin-right: -0.2rem;
+}
+
+.Important {
+  border: 0.1rem solid #000;
+  margin: -0.1rem;
+  height: 100%;
+  width: 100%;
+  display: inline-block;
+  align-items: center;
+  padding-left: 0.2rem;
+  margin-left: -0.2rem;
+  padding-right: 0.2rem;
+  margin-right: -0.2rem;
+}
+
+img {
+  vertical-align: middle;
+  width: 1.5rem;
+  height: 1.5rem;
+  user-drag: none;
+  -webkit-user-drag: none;
+  -moz-user-select: none;
+}
+
+.might {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+.nameAreaIconContainer {
+  width: 100%;
+  text-align: center;
+}
+
+.iconContainer {
+  display: inline-block;
+  width: 1.5rem;
+  height: 1.6rem;
+  position: relative;
+}
+
+.iconTextContainer {
+  position: absolute;
+  display: inline-block;
+  top: 0.6rem;
+  left: -1.85rem;
+  width: 5.2rem;
+  transform: scale(0.4);
+  padding: 0;
+  margin: 0;
+  text-align: center;
+}
+
+.iconText {
+  display: inline-block;
+  font-size: 1rem;
+  font-weight: bold;
+  height: fit-content;
+  width: fit-content;
+  min-width: 3.5rem;
+  background-color: #fff;
+  border-radius: 0.2rem;
+  border: 0.1rem solid #000;
+  box-sizing: border-box;
+}
+
+.revive {
+  position: absolute;
+  width: 1.5rem;
+  height: 1.5rem;
+  top: 0;
+  left: -1.5rem;
+}
+
+* {
+  -ms-user-select: none;
+  /* IE 10+ */
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.popupWindow {
+  white-space: nowrap;
+  position: relative;
+}
+
+.droppableContainer {
+  display: flex;
+  white-space: nowrap;
+  position: absolute;
+  left: 0;
+}
+
+.playerWindowContainer {
+  display: inline-block;
+}
+
+.blockContainer {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  overflow: visible;
+  position: relative;
+}
+
+.scalerBox {
+  display: inline-block;
+  width: 5.1rem;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.scaler {
+  display: inline-block;
+  transform: scale(0.6);
+  transform-origin: top left;
+  overflow: visible;
+  white-space: nowrap;
+}
+
+.playerWindow, .playerWindow_dead {
+  display: inline-block;
+  height: fit-content;
+  width: 8.5rem;
+  overflow: hidden;
+  background-color: #fff;
+  border-radius: 0.5rem;
+  border: 0.1rem solid #000;
+  box-sizing: border-box;
+}
+
+.playerWindow_dead::after {
+  content: "　";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(to right top, transparent 0%, transparent 45%, black 45.5%, black 54.5%, transparent 55%, transparent 100%), linear-gradient(to left top, transparent 0%, transparent 45%, black 46%, black 54%, transparent 55%, transparent 100%);
+  opacity: 0.2;
+  border-radius: 0.5rem;
+}
+
+.playerRole {
+  text-align: center;
+  width: 100%;
+}
+
+.playerRole img {
+  width: 3rem;
+  height: 3rem;
+  margin: 0.2rem;
+  border: 0.1rem solid #555;
+  border-radius: 0.5rem;
+  box-sizing: border-box;
+}
+
+.RoleContainer {
+  display: inline-block;
+  width: 3.4rem;
+  height: 3.4rem;
+  position: relative;
+}
+
+.deadRoleContainer {
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  left: 1.7rem;
+}
+
+.insaneRoleContainer {
+  display: inline-block;
+  position: absolute;
+  top: 1.4rem;
+  left: -1rem;
+}
+
+.insaneRoleContainer img {
+  display: inline-block;
+  width: 2rem;
+  height: 2rem;
+}
+
+.playerList {
+  display: flex;
+  flex-flow: row nowrap;
+  height: 1.7rem;
+  width: 100%;
+  border-bottom: 0.1rem solid #ccc;
+  box-sizing: border-box;
+}
+
+.playerActionContainer {
+  display: inline-block;
+  height: 100%;
+  width: 3.2rem;
+  vertical-align: middle;
+  overflow: visible;
+  white-space: nowrap;
+}
+
+.playerItem {
+  position: relative;
+  text-align: center;
+  vertical-align: middle;
+  display: inline-block;
+  width: 1.5rem;
+  height: 1.6rem;
+  line-height: 1.6rem;
+}
+
+.playerItemFloat {
+  position: absolute;
+  top: 0;
+  left: 0;
+  text-align: center;
+  vertical-align: middle;
+  display: inline-block;
+  width: 1.5rem;
+  height: 1.6rem;
+  line-height: 1.6rem;
+}
+
+.PlayerWindowColorBorder {
+  width: 100%;
+  height: 0.5rem;
+  font-size: 0.5rem;
+}
+
+/*# sourceMappingURL=popup.css.map */
